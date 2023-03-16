@@ -10,7 +10,8 @@ import GlobalDrawer from '@/components/GlobalDrawer'
 import UpdateForm from './UpdateForm';
 import Info from './Subject/index'
 
-import * as service_demoTable from '@/services/demo/demoTable';
+import * as service_msq from '@/services/cms/msq';
+import * as service_common from '@/services/common';
 
 const RoleManage = () => {
   const dispatch = useDispatch()
@@ -25,17 +26,25 @@ const RoleManage = () => {
       valueType: 'indexBorder',
     },
     {
-      title: '所属题目',
-      dataIndex: 'roleName',
+      title: '所属项目',
+      dataIndex: 'projectId',
+      render:(_,record)=><div>{record.id=='elementary'?'初级问卷':record.projectName}</div>,
+      request:async()=>{
+        const res=await service_common.findSelectList()
+        return res.data
+      },
+      fieldProps: () => ({
+        fieldNames: { value: "id",label: "name" },
+      }),
     },
     {
       title: '题目数量',
-      dataIndex: 'state',
+      dataIndex: 'subjectNum',
       hideInSearch: true,
     },
    {
-    title: '问卷调查量',
-    dataIndex: 'status',
+    title: '问卷完成量',
+    dataIndex: 'finishNum',
     hideInSearch: true,
    },
     {
@@ -68,12 +77,10 @@ const RoleManage = () => {
      const hide = message.loading({ content: '操作中', key: 'loading' });
      const res = await dispatch({
        type: 'global/service',
-       service: fields.id ? service_demoTable.update : service_demoTable.add,
+       service: fields.id ? service_msq.update : service_msq.add,
        payload: {
          id: fields.id,
-         sort: fields.sort,
-         name: fields.name,
-         url: fields.url,
+         projectId: fields.projectId,
        }
      })
      hide();
@@ -85,29 +92,12 @@ const RoleManage = () => {
        message.error({ content: res.msg, key: 'error' });
      }
    };
-  const handleSwitchChange = async record => {
-    const hide = message.loading({ content: '操作中', key: 'loading' });
-    const res = await dispatch({
-      type: 'global/service',
-      service: service_demoTable.update,
-      payload: {
-        id: record.id,
-        state: Number(record.state) ? 0 : 1
-      }
-    })
-    hide()
-    if (res?.code == 200) {
-      message.success({ content: '操作成功', key: 'success' });
-    } else {
-      message.error({ content: res.msg, key: 'error' });
-    }
-    actionRef.current?.reload();
-  }
+
   const handleDeleteRecord = async record => {
     const hide = message.loading({ content: '正在删除', key: 'delete' });
     const res = await dispatch({
       type: 'global/service',
-      service: service_demoTable.remove,
+      service: service_msq.remove,
       payload: { id: record.id }
     })
     hide();
@@ -130,7 +120,7 @@ const RoleManage = () => {
         ]}
         request={({ current, ...params }) => {
           // console.log(params)//查询参数，pageNum用current特殊处理
-          return service_demoTable.query({ ...params, pageNum: current })
+          return service_msq.query({ ...params, pageNum: current })
         }}
         postData={data => data.list}
         columns={columns}
@@ -143,7 +133,7 @@ const RoleManage = () => {
         }}
         title="题目管理"
       >
-        <Info/>
+        <Info  values={stepFormValues}/>
       </GlobalDrawer>
       <GlobalModal
         open={updateModalVisible}

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Form, Button, Input,Select } from 'antd';
 import { ProForm } from '@ant-design/pro-components';
 
 import { useSelector } from 'umi';
-
+import * as service_common from '@/services/common';
 const FormItem = Form.Item;
 const { TextArea } = Input
 const formLayout = {
@@ -21,9 +21,16 @@ const UpdateForm = ({
   const [formVals, setFormVals] = useState({
     ...values
   });
-
+  const [selectList,setList]=useState([])
   const [form] = Form.useForm();
-
+  useEffect(() => {
+    (async ()=>{
+      const res=await service_common.findSelectList()
+      if(res.code===200){
+        setList([{id:'elementary',name:'初级问卷'},...res.data,])
+      }
+    })()
+  }, [])
   const renderFooter = () => {
     return (
       <FormItem wrapperCol={24}>
@@ -43,15 +50,13 @@ const UpdateForm = ({
       {...formLayout}
       form={form}
       initialValues={{
-        roleName: formVals.roleName,
-        description: formVals.description,
-        moduleIds: formVals.moduleIds
+        projectId: formVals.projectId,
       }}
     >
       <FormItem
-        name="select"
+        name="projectId"
         label="所属项目"
-        rules={[{ required: true, message: '请选择xx！' }]}
+        rules={[{ required: true, message: '请选择！' }]}
       >
         <Select
           allowClear
@@ -60,16 +65,11 @@ const UpdateForm = ({
           placeholder="请选择"
           style={{ width: '100%' }}
           getPopupContainer={triggerNode => triggerNode.parentElement}
-          options={[
-            {
-              value: 'jack',
-              label: 'Jack',
-            },
-            {
-              value: 'lucy',
-              label: 'Lucy',
-            },
-          ]}
+          options={selectList}
+          fieldNames={{
+            value:'id',
+            label:'name'
+          }}
         >
         </Select>
       </FormItem>

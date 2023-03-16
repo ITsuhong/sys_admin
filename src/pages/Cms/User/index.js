@@ -8,7 +8,7 @@ import StandardTable from '@/components/StandardTable';
 import GlobalDrawer from '@/components/GlobalDrawer'
 import Info from "./Msq/index"
 
-import * as service_demoTable from '@/services/demo/demoTable';
+import * as service_user from '@/services/cms/user';
 
 const User = () => {
   const dispatch = useDispatch()
@@ -23,11 +23,11 @@ const User = () => {
     },
     {
       title: '用户手机号',
-      dataIndex: 'number',
+      dataIndex: 'account',
     },
     {
       title: '用户昵称',
-      dataIndex: 'roleNames',
+      dataIndex: 'nickname',
     },
     {
       title: '状态',
@@ -62,7 +62,7 @@ const User = () => {
     const hide = message.loading({ content: '操作中', key: 'loading' });
     const res = await dispatch({
       type: 'global/service',
-      service: service_demoTable.update,
+      service: service_user.update,
       payload: {
         id: record.id,
         state: Number(record.state) ? 0 : 1
@@ -81,14 +81,9 @@ const User = () => {
     <PageContainer>
       <StandardTable
         actionRef={actionRef}
-        toolBarRender={() => [
-          <Button key='add' type="primary" onClick={() => { handleUpdateModalVisible(true); setStepFormValues({}) }}>
-            <PlusOutlined /> 新增
-          </Button>,
-        ]}
         request={({ current, ...params }) => {
           // console.log(params)//查询参数，pageNum用current特殊处理
-          return service_demoTable.query({ ...params, pageNum: current })
+          return service_user.query({ ...params, pageNum: current })
         }}
         postData={data => data.list}
         columns={columns}

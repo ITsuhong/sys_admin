@@ -8,7 +8,7 @@ import StandardTable from '@/components/StandardTable';
 import GlobalDrawer from '@/components/GlobalDrawer'
 import Info from './Info';
 
-import * as service_demoTable from '@/services/demo/demoTable';
+import * as service_ccrp from '@/services/cms/ccrp';
 
 const Ccrp = () => {
   const dispatch = useDispatch()
@@ -22,16 +22,16 @@ const Ccrp = () => {
     },
     {
       title: '用户手机号',
-      dataIndex: 'codeKey',
+      dataIndex: 'account',
     },
     {
       title: '用户昵称',
-      dataIndex: 'codeKey',
+      dataIndex: 'nickname',
       search: false,
     },
     {
       title: '反馈内容',
-      dataIndex: 'description',
+      dataIndex: 'content',
       ellipsis: true,
       search: false,
     },
@@ -62,7 +62,7 @@ const Ccrp = () => {
         actionRef={actionRef}
         request={({ current, ...params }) => {
           // console.log(params)//查询参数，pageNum用current特殊处理
-          return service_demoTable.query({ ...params, pageNum: current })
+          return service_ccrp.query({ ...params, pageNum: current })
         }}
         postData={data => data.list}
         columns={columns}

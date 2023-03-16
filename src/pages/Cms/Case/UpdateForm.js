@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Form, Button, Input, Select,InputNumber } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Form, Button, Input, Select, InputNumber } from 'antd';
 import { ProForm } from '@ant-design/pro-components';
 import GlobalUpload from '@/components/GlobalUpload';
 import BraftEditor from '@/components/BraftEditor';
 import { useSelector } from 'umi';
-
+import * as service_common from '@/services/common';
 const FormItem = Form.Item;
 const { Option } = Select
 const formLayout = {
@@ -16,9 +16,16 @@ const UpdateForm = ({
   values
 }) => {
   const submiting = useSelector(state => state.loading).effects['global/service']
-
+  const [selectList,setList]=useState([])
   // console.log(moduleIds,'moduleIds')
-
+  useEffect(() => {
+    (async ()=>{
+      const res=await service_common.findSelectList()
+      if(res.code===200){
+        setList(res.data)
+      }
+    })()
+  }, [])
   const [formVals, setFormVals] = useState({
     ...values
   });
@@ -44,42 +51,45 @@ const UpdateForm = ({
       {...formLayout}
       form={form}
       initialValues={{
-        roleName: formVals.roleName,
-        description: formVals.description,
-        moduleIds: formVals.moduleIds
+        name: formVals.name,
+        content: formVals.content,
+        cover: formVals.cover,
+        imgs: formVals.imgs,
+        projectId: formVals.projectId,
+        sort: formVals.sort,
       }}
     >
       <FormItem
-        name="roleName"
+        name="name"
         label="案例名称"
         rules={[{ required: true, message: '请输入！' }]}
       >
         <Input placeholder="请输入" maxLength={50} allowClear style={{ width: '100%' }} />
       </FormItem>
       <FormItem
-        name="logo1"
+        name="cover"
         label="案例封面"
         rules={[{ required: true, message: '请上传图片！' }]}
       >
         <GlobalUpload data={{ type: 'case/cover' }} maxCount={1} />
       </FormItem>
-     
+
       <FormItem
-        name="logo1"
+        name="imgs"
         label="案例图片"
         rules={[{ required: true, message: '请上传图片！' }]}
       >
-        <GlobalUpload data={{ type: 'project/imgs' }} maxCount={1} />
+        <GlobalUpload data={{ type: 'project/imgs' }} maxCount={9} />
       </FormItem>
       <FormItem
-        name="content1"
+        name="content"
         label="案例内容"
         rules={[{ required: true, message: '请输入内容！' }]}
       >
         <BraftEditor />
       </FormItem>
       <FormItem
-        name="select"
+        name="projectId"
         label="所属项目"
         rules={[{ required: true, message: '请选择xx！' }]}
       >
@@ -90,16 +100,13 @@ const UpdateForm = ({
           placeholder="请选择"
           style={{ width: '100%' }}
           getPopupContainer={triggerNode => triggerNode.parentElement}
-          options={[
+          options={selectList}
+          fieldNames={
             {
-              value: 'jack',
-              label: 'Jack',
-            },
-            {
-              value: 'lucy',
-              label: 'Lucy',
-            },
-          ]}
+              value:'id',
+              label:'name'
+            }
+          }
         >
         </Select>
       </FormItem>

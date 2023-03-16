@@ -8,7 +8,7 @@ import StandardTable from '@/components/StandardTable';
 import GlobalModal from '@/components/GlobalModal'
 import UpdateForm from './UpdateForm';
 
-import * as service_demoTable from '@/services/demo/demoTable';
+import * as service_project from '@/services/cms/project';
 
 const RoleManage = () => {
   const dispatch = useDispatch()
@@ -23,17 +23,17 @@ const RoleManage = () => {
     },
     {
       title: '项目名称',
-      dataIndex: 'roleName',
+      dataIndex: 'name',
     },
     {
       title: '项目图片',
-      dataIndex: 'img',
+      dataIndex: 'imgs',
       hideInSearch: true,
       render: (text, record) => <Image width={20} height={20} src={text} />
     },
     {
       title: '排序',
-      dataIndex: 'state',
+      dataIndex: 'sort',
       hideInSearch: true,
     },
     {
@@ -69,12 +69,14 @@ const RoleManage = () => {
      const hide = message.loading({ content: '操作中', key: 'loading' });
      const res = await dispatch({
        type: 'global/service',
-       service: fields.id ? service_demoTable.update : service_demoTable.add,
+       service: fields.id ? service_project.update : service_project.add,
        payload: {
          id: fields.id,
-         sort: fields.sort,
+         icon: fields.icon,
          name: fields.name,
-         url: fields.url,
+         sort: fields.sort,
+         introduce: fields.introduce,
+         imgs:fields.imgs
        }
      })
      hide();
@@ -90,7 +92,7 @@ const RoleManage = () => {
     const hide = message.loading({ content: '操作中', key: 'loading' });
     const res = await dispatch({
       type: 'global/service',
-      service: service_demoTable.update,
+      service: service_project.update,
       payload: {
         id: record.id,
         state: Number(record.state) ? 0 : 1
@@ -116,7 +118,7 @@ const RoleManage = () => {
         ]}
         request={({ current, ...params }) => {
           // console.log(params)//查询参数，pageNum用current特殊处理
-          return service_demoTable.query({ ...params, pageNum: current })
+          return service_project.query({ ...params, pageNum: current })
         }}
         postData={data => data.list}
         columns={columns}

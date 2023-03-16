@@ -8,9 +8,10 @@ import StandardTable from '@/components/StandardTable';
 import GlobalModal from '@/components/GlobalModal'
 import UpdateForm from './UpdateForm';
 
-import * as service_demoTable from '@/services/demo/demoTable';
+import * as service_msq from '@/services/cms/msq';
+import { values } from 'lodash';
 
-const RoleManage = () => {
+const Subject = ({values}) => {
   const dispatch = useDispatch()
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
   const [stepFormValues, setStepFormValues] = useState({});
@@ -23,17 +24,23 @@ const RoleManage = () => {
     },
     {
       title: '题目',
-      dataIndex: 'roleName',
+      dataIndex: 'subject',
     },
     {
       title: '类型',
-      dataIndex: 'state',
+      dataIndex: 'type',
+      valueEnum:{
+        0:'单选',
+        1:'多选'
+      },
       hideInSearch: true,
     },
    {
     title: '选项',
-    dataIndex: 'status',
+    dataIndex: 'options',
     hideInSearch: true,
+    render:(_,record)=><div>{record.options.replace(/&/g,",")}</div>,
+    ellipsis:true
    },
     {
       title: '创建时间',
@@ -64,12 +71,14 @@ const RoleManage = () => {
      const hide = message.loading({ content: '操作中', key: 'loading' });
      const res = await dispatch({
        type: 'global/service',
-       service: fields.id ? service_demoTable.update : service_demoTable.add,
+       service: fields.id ? service_msq.updateSubject : service_msq.addSubject,
        payload: {
          id: fields.id,
          sort: fields.sort,
-         name: fields.name,
-         url: fields.url,
+         options: fields.options,
+         subject: fields.subject,
+         type: fields.type,
+         questionnaireId:values.id
        }
      })
      hide();
@@ -81,29 +90,11 @@ const RoleManage = () => {
        message.error({ content: res.msg, key: 'error' });
      }
    };
-  const handleSwitchChange = async record => {
-    const hide = message.loading({ content: '操作中', key: 'loading' });
-    const res = await dispatch({
-      type: 'global/service',
-      service: service_demoTable.update,
-      payload: {
-        id: record.id,
-        state: Number(record.state) ? 0 : 1
-      }
-    })
-    hide()
-    if (res?.code == 200) {
-      message.success({ content: '操作成功', key: 'success' });
-    } else {
-      message.error({ content: res.msg, key: 'error' });
-    }
-    actionRef.current?.reload();
-  }
   const handleDeleteRecord = async record => {
     const hide = message.loading({ content: '正在删除', key: 'delete' });
     const res = await dispatch({
       type: 'global/service',
-      service: service_demoTable.remove,
+      service: service_msq.removeSubject,
       payload: { id: record.id }
     })
     hide();
@@ -126,7 +117,7 @@ const RoleManage = () => {
         ]}
         request={({ current, ...params }) => {
           // console.log(params)//查询参数，pageNum用current特殊处理
-          return service_demoTable.query({ ...params, pageNum: current })
+          return service_msq.querySubject({ ...params, pageNum: current,questionnaireId:values.id })
         }}
         postData={data => data.list}
         columns={columns}
@@ -148,4 +139,4 @@ const RoleManage = () => {
   );
 };
 
-export default RoleManage;
+export default Subject;

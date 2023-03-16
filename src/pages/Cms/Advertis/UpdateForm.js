@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { Form, Button, Input, Select, InputNumber } from 'antd';
 import { ProForm ,ProFormDependency} from '@ant-design/pro-components';
 import GlobalUpload from '@/components/GlobalUpload';
 import BraftEditor from '@/components/BraftEditor';
 import { useSelector } from 'umi';
+import * as service_case from '@/services/cms/case';
 const FormItem = Form.Item;
 const { TextArea } = Input
 const formLayout = {
@@ -15,13 +16,18 @@ const UpdateForm = ({
   values
 }) => {
   const submiting = useSelector(state => state.loading).effects['global/service']
-
-  // console.log(moduleIds,'moduleIds')
-
   const [formVals, setFormVals] = useState({
     ...values
   });
-
+  const [selectList,setList]=useState([])
+  useEffect(()=>{
+    (async ()=>{
+      const res=await service_case.query({limit:0})
+      if(res.code==200){
+        setList(res.data.list)
+      }
+    })()
+  },[])
   const [form] = Form.useForm();
 
   const renderFooter = () => {
@@ -43,13 +49,15 @@ const UpdateForm = ({
       {...formLayout}
       form={form}
       initialValues={{
-        roleName: formVals.roleName,
-        description: formVals.description,
-        moduleIds: formVals.moduleIds
+        img: formVals.img,
+        sort: formVals.sort,
+        relationType: formVals.relationType,
+        richText:formVals.relationType==0?formVals.relationDetail:'',
+        objId:formVals.relationType==1?formVals.relationDetail:''
       }}
     >
       <FormItem
-        name="logo1"
+        name="img"
         label="轮播图"
         rules={[{ required: true, message: '请上传图片！' }]}
       >
@@ -63,32 +71,7 @@ const UpdateForm = ({
         <InputNumber style={{ width: '100%' }} min={1} precision={0} placeholder="请输入" />
       </FormItem>
       <FormItem
-        name="select"
-        label="位置"
-        rules={[{ required: true, message: '请选择！' }]}
-      >
-        <Select
-          allowClear
-          showSearch
-          optionFilterProp="children"
-          placeholder="请选择"
-          style={{ width: '100%' }}
-          getPopupContainer={triggerNode => triggerNode.parentElement}
-          options={[
-            {
-              value: '0',
-              label: '商城',
-            },
-            {
-              value: '1',
-              label: '首页',
-            },
-          ]}
-        >
-        </Select>
-      </FormItem>
-      <FormItem
-        name="type"
+        name="relationType"
         label="关联类型"
         rules={[{ required: true, message: '请选择！' }]}
       >
@@ -101,33 +84,33 @@ const UpdateForm = ({
           getPopupContainer={triggerNode => triggerNode.parentElement}
           options={[
             {
-              value: '0',
+              value: 0,
               label: '图文详情',
             },
             {
-              value: '1',
+              value: 1,
               label: '案例详情',
             },
             {
-              value: '2',
+              value: 2,
               label: '出海流程',
             },
             {
-              value: '3',
+              value: 3,
               label: '公司介绍',
             },
             {
-              value: '4',
+              value: 4,
               label: '关于我们',
             }
           ]}
         >
         </Select>
       </FormItem>
-      <ProFormDependency name={['type']}>
-        {({type})=>{
-        return  type==0 && <FormItem
-          name="content1"
+      <ProFormDependency name={['relationType']}>
+        {({relationType})=>{
+        return  relationType==0 && <FormItem
+          name="richText"
           label="图文详情"
           rules={[{ required: true, message: '请输入内容！' }]}
         >
@@ -136,10 +119,10 @@ const UpdateForm = ({
         }}
 
       </ProFormDependency>
-     <ProFormDependency  name={['type']}>
-      {({type})=>{
-       return type==1 &&  <FormItem
-        name="select"
+     <ProFormDependency  name={['relationType']}>
+      {({relationType})=>{
+       return relationType==1 &&  <FormItem
+        name="objId"
         label="关联对象名称"
         rules={[{ required: true, message: '请选择！' }]}
       >
@@ -150,16 +133,11 @@ const UpdateForm = ({
           placeholder="请选择"
           style={{ width: '100%' }}
           getPopupContainer={triggerNode => triggerNode.parentElement}
-          options={[
-            {
-              value: 'jack',
-              label: 'Jack',
-            },
-            {
-              value: 'lucy',
-              label: 'Lucy',
-            },
-          ]}
+          options={selectList}
+          fieldNames={{
+            value:'id',
+            label:'name'
+          }}
         >
         </Select>
       </FormItem>

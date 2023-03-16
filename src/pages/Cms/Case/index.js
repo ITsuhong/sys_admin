@@ -8,7 +8,8 @@ import StandardTable from '@/components/StandardTable';
 import GlobalModal from '@/components/GlobalModal'
 import UpdateForm from './UpdateForm';
 
-import * as service_demoTable from '@/services/demo/demoTable';
+import * as service_case from '@/services/cms/case';
+import * as service_common from '@/services/common';
 
 const Case = () => {
   const dispatch = useDispatch()
@@ -23,26 +24,34 @@ const Case = () => {
     },
     {
       title: '案例名称',
-      dataIndex: 'roleName',
+      dataIndex: 'name',
     },
     {
       title: '案例封面',
-      dataIndex: 'img',
+      dataIndex: 'cover',
       hideInSearch: true,
       render: (text, record) => <Image width={20} height={20} src={text} />
     },
+    
     {
       title: '所属项目',
-      dataIndex: 'moduleName',
-      hideInSearch: true,
+      dataIndex: 'projectId',
+      render:(_,record)=><div>{record.projectName}</div>,
+      request:async()=>{
+        const res=await service_common.findSelectList()
+        return res.data
+      },
+      fieldProps: () => ({
+        fieldNames: { value: "id",label: "name" },
+      }),
     },
     {
       title: '是否推荐',
-      dataIndex: 'status',
-      render: (text, record) => <Switch checked={Boolean(record.status)} onChange={() => handleSwitchChange(record)} checkedChildren="是" unCheckedChildren="否" />,
+      dataIndex: 'recommend',
+      render: (text, record) => <Switch checked={Boolean(record.recommend)} onChange={() => handleTypeChange(record)} checkedChildren="是" unCheckedChildren="否" />,
       valueEnum: {
-        0: '否',
-        1: '是',
+        0: '未推荐',
+        1: '已推荐',
       },
     },
     {
@@ -84,12 +93,15 @@ const Case = () => {
     const hide = message.loading({ content: '操作中', key: 'loading' });
     const res = await dispatch({
       type: 'global/service',
-      service: fields.id ? service_demoTable.update : service_demoTable.add,
+      service: fields.id ? service_case.update : service_case.add,
       payload: {
         id: fields.id,
         sort: fields.sort,
         name: fields.name,
-        url: fields.url,
+        imgs: fields.imgs,
+        content: fields.content,
+        projectId: fields.projectId,
+        cover:fields.cover
       }
     })
     hide();
@@ -105,7 +117,7 @@ const Case = () => {
     const hide = message.loading({ content: '操作中', key: 'loading' });
     const res = await dispatch({
       type: 'global/service',
-      service: service_demoTable.update,
+      service: service_case.update,
       payload: {
         id: record.id,
         state: Number(record.state) ? 0 : 1
@@ -119,11 +131,29 @@ const Case = () => {
     }
     actionRef.current?.reload();
   }
+   const handleTypeChange = async record => {
+      const hide = message.loading({ content: '操作中', key: 'loading' });
+      const res = await dispatch({
+        type: 'global/service',
+        service: service_case.update,
+        payload: {
+          id: record.id,
+          recommend: Number(record.recommend) ? 0 : 1
+        }
+      })
+      hide()
+      if (res?.code == 200) {
+        message.success({ content: '操作成功', key: 'success' });
+      } else {
+        message.error({ content: res.msg, key: 'error' });
+      }
+      actionRef.current?.reload();
+    }
   const handleDeleteRecord = async record => {
     const hide = message.loading({ content: '正在删除', key: 'delete' });
     const res = await dispatch({
       type: 'global/service',
-      service: service_role.remove,
+      service: service_case.remove,
       payload: { id: record.id }
     })
     hide();
@@ -146,7 +176,7 @@ const Case = () => {
         ]}
         request={({ current, ...params }) => {
           // console.log(params)//查询参数，pageNum用current特殊处理
-          return service_demoTable.query({ ...params, pageNum: current })
+          return service_case.query({ ...params, pageNum: current })
         }}
         postData={data => data.list}
         columns={columns}

@@ -8,7 +8,7 @@ import StandardTable from '@/components/StandardTable';
 import GlobalDrawer from '@/components/GlobalDrawer'
 
 
-import * as service_demoTable from '@/services/demo/demoTable';
+import * as service_user from '@/services/cms/user';
 
 const Msq = () => {
   const dispatch = useDispatch()
@@ -23,7 +23,7 @@ const Msq = () => {
     },
     {
       title: '用户问卷类型',
-      dataIndex: 'number',
+      dataIndex: 'typeName',
       hideInSearch:true
     },
     {
@@ -47,24 +47,6 @@ const Msq = () => {
     },
   ];
 
-  const handleSwitchChange = async record => {
-    const hide = message.loading({ content: '操作中', key: 'loading' });
-    const res = await dispatch({
-      type: 'global/service',
-      service: service_demoTable.update,
-      payload: {
-        id: record.id,
-        state: Number(record.state) ? 0 : 1
-      }
-    })
-    hide()
-    if (res?.code == 200) {
-      message.success({ content: '操作成功', key: 'success' });
-    } else {
-      message.error({ content: res.msg, key: 'error' });
-    }
-    actionRef.current?.reload();
-  }
 
   return (
     <>
@@ -73,7 +55,7 @@ const Msq = () => {
         actionRef={actionRef}
         request={({ current, ...params }) => {
           // console.log(params)//查询参数，pageNum用current特殊处理
-          return service_demoTable.query({ ...params, pageNum: current })
+          return service_user.findQuestionnaireList({ ...params, pageNum: current })
         }}
         postData={data => data.list}
         columns={columns}
@@ -86,7 +68,7 @@ const Msq = () => {
         }}
         title="查看"
       >
-       <Info/>
+       <Info values={stepFormValues}/>
       </GlobalDrawer>
     </>
   );

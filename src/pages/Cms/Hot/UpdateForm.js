@@ -43,13 +43,12 @@ const UpdateForm = ({
       {...formLayout}
       form={form}
       initialValues={{
-        roleName: formVals.roleName,
-        description: formVals.description,
-        moduleIds: formVals.moduleIds
+        hotWord: formVals.hotWord,
+        sort: formVals.sort,
       }}
     >
       <FormItem
-        name="roleName"
+        name="hotWord"
         label="关键词"
         rules={[{ required: true, message: '请输入！' }]}
       >

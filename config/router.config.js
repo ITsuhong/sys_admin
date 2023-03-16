@@ -44,12 +44,6 @@ export default [
         path: '/sys/params',
         component: './Sys/SysParams',
       },
-      {
-        name: '版本更新',
-        access: 'accessRoute',
-        path: '/sys/app',
-        component: './Sys/App',
-      },
     ]
   },
   {
@@ -100,38 +94,6 @@ export default [
         path: '/cms/advertis',
         component: './Cms/Advertis',
       }
-    ]
-  },
-  {
-    name: '测试菜单',
-    access: 'accessRoute',
-    icon: 'table',
-    path: '/demo',
-    routes: [
-      {
-        name: '查询表格',
-        access: 'accessRoute',
-        path: '/demo/demoTable',
-        component: './Demo/DemoTable',
-      },
-      {
-        name: '三级分类',
-        access: 'accessRoute',
-        path: '/demo/type',
-        component: './Demo/Type',
-      },
-      {
-        name: '帮助中心',
-        access: 'accessRoute',
-        path: '/demo/helpCenter',
-        component: './Demo/HelpCenter',
-      },
-      {
-        name: '客服中心',
-        access: 'accessRoute',
-        path: '/demo/customer',
-        component: './Demo/CustomerService',
-      },
     ]
   },
   {

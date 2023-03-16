@@ -13,7 +13,7 @@ const EditTag = ({
   const [editInputValue, setEditInputValue] = useState('')
   const editInputRef = useRef()
   const inputRef = useRef()
-  const [tags,setTags] = useState(value?.split(',') || [])
+  const [tags,setTags] = useState(value?.split('&') || [])
 
 
   const handleInputConfirm = () => {
@@ -24,7 +24,7 @@ const EditTag = ({
     setInputValue('')
     setInputVisible(false)
     setTags(newTags)
-    onChange(newTags.join(',') || undefined)
+    onChange(newTags.join('&') || undefined)
   }
 
   const handleEditInputConfirm = () => {
@@ -33,7 +33,7 @@ const EditTag = ({
     setEditInputIndex(-1)
     setEditInputValue('')
     setTags(newTags)
-    onChange(newTags.join(',') || undefined)
+    onChange(newTags.join('&') || undefined)
   }
 
   useEffect(() => {

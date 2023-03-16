@@ -43,20 +43,22 @@ const UpdateForm = ({
       {...formLayout}
       form={form}
       initialValues={{
-        roleName: formVals.roleName,
-        description: formVals.description,
-        moduleIds: formVals.moduleIds
+        icon: formVals.icon,
+        imgs: formVals.imgs,
+        introduce: formVals.introduce,
+        sort: formVals.sort,
+        name:formVals.name
       }}
     >
       <FormItem
-        name="roleName"
+        name="name"
         label="项目名称"
         rules={[{ required: true, message: '请输入！' }]}
       >
         <Input placeholder="请输入" maxLength={50} allowClear style={{ width: '100%' }} />
       </FormItem>
       <FormItem
-        name="logo1"
+        name="icon"
         label="项目图标"
         rules={[{ required: true, message: '请上传图片！' }]}
       >
@@ -70,14 +72,14 @@ const UpdateForm = ({
         <InputNumber style={{ width: '100%' }} min={1} precision={0} placeholder="请输入" />
       </FormItem>
       <FormItem
-        name="logo1"
+        name="imgs"
         label="项目图片"
         rules={[{ required: true, message: '请上传图片！' }]}
       >
-        <GlobalUpload data={{ type: 'project/img' }} maxCount={1} />
+        <GlobalUpload data={{ type: 'project/img' }} maxCount={9} />
       </FormItem>
       <FormItem
-        name="textArea"
+        name="introduce"
         label="项目介绍"
         rules={[{ required: true, message: '请输入文本！' }]}
       >

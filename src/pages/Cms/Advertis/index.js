@@ -8,7 +8,7 @@ import StandardTable from '@/components/StandardTable';
 import GlobalModal from '@/components/GlobalModal'
 import UpdateForm from './UpdateForm';
 
-import * as service_demoTable from '@/services/demo/demoTable';
+import * as service_advertis from '@/services/cms/advertis';
 
 const RoleManage = () => {
   const dispatch = useDispatch()
@@ -23,7 +23,7 @@ const RoleManage = () => {
     },
     {
       title: '排序',
-      dataIndex: 'state',
+      dataIndex: 'sort',
       hideInSearch: true,
     },
     {
@@ -34,7 +34,7 @@ const RoleManage = () => {
     },
     {
       title: '关联类型',
-      dataIndex: 'status',
+      dataIndex: 'relationType',
       valueEnum:{
         0:'图文详情',
         1:'案例详情',
@@ -81,12 +81,13 @@ const RoleManage = () => {
      const hide = message.loading({ content: '操作中', key: 'loading' });
      const res = await dispatch({
        type: 'global/service',
-       service: fields.id ? service_demoTable.update : service_demoTable.add,
+       service: fields.id ? service_advertis.update : service_advertis.add,
        payload: {
          id: fields.id,
+         img: fields.img,
+         relationType: fields.relationType,
          sort: fields.sort,
-         name: fields.name,
-         url: fields.url,
+         relationDetail: fields.relationType==0?fields.richText:fields.relationType==1?fields.objId:'',
        }
      })
      hide();
@@ -120,7 +121,7 @@ const RoleManage = () => {
     const hide = message.loading({ content: '正在删除', key: 'delete' });
     const res = await dispatch({
       type: 'global/service',
-      service: service_demoTable.remove,
+      service: service_advertis.remove,
       payload: { id: record.id }
     })
     hide();
@@ -143,7 +144,7 @@ const RoleManage = () => {
         ]}
         request={({ current, ...params }) => {
           // console.log(params)//查询参数，pageNum用current特殊处理
-          return service_demoTable.query({ ...params, pageNum: current })
+          return service_advertis.query({ ...params, pageNum: current })
         }}
         postData={data => data.list}
         columns={columns}

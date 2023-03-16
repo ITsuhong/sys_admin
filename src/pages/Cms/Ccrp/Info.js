@@ -16,13 +16,13 @@ const Info = ({
       bordered
     >
       <ProDescriptions.Item label="用户手机号">
-        <Field text="" />
+        <Field text={formVals.account} />
       </ProDescriptions.Item>
       <ProDescriptions.Item label="用户昵称">
-        <Field text="" />
+        <Field text={formVals.nickname} />
       </ProDescriptions.Item>
       <ProDescriptions.Item label="反馈内容" span={2}>
-        <Field text="这是一段文本" />
+        <Field text={formVals.content} />
       </ProDescriptions.Item>
       <ProDescriptions.Item label="反馈图片">
         <Image.PreviewGroup>

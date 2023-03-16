@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button, Input, Radio } from 'antd';
+import { Form, Button, Input, Radio ,InputNumber} from 'antd';
 import { ProForm } from '@ant-design/pro-components';
 import { useSelector } from 'umi';
 import EditTag from '@/components/EditTag';
@@ -42,35 +42,45 @@ const UpdateForm = ({
       {...formLayout}
       form={form}
       initialValues={{
-        roleName: formVals.roleName,
-        description: formVals.description,
-        state: formVals.state
+        subject: formVals.subject,
+        type: formVals.type,
+        options: formVals.options,
+        sort: formVals.sort
       }}
     >
       <FormItem
-        name="roleName"
+        name="subject"
         label="题目"
         rules={[{ required: true, message: '请输入！' }]}
       >
         <Input placeholder="请输入" maxLength={50} allowClear style={{ width: '100%' }} />
       </FormItem>
       <FormItem
-        name="state"
+        name="type"
         label="类型"
         rules={[{ required: true, message: '请输入！' }]}
       >
         <Radio.Group>
-          <Radio value={1}>单选</Radio>
-          <Radio value={2}>多选</Radio>
+          <Radio value={0}>单选</Radio>
+          <Radio value={1}>多选</Radio>
         </Radio.Group>
       </FormItem>
       <FormItem
-        name="tags"
+        name="options"
         label="选项"
         rules={[{ required: true, message: '请添加！' }]}
       >
         <EditTag />
       </FormItem>
+     {
+       formVals.id && <FormItem
+       name="sort"
+       label="排序权重"
+       rules={[{ required: true, message: '请输入！' }]}
+     >
+       <InputNumber style={{ width: '100%' }} min={1} precision={0} placeholder="请输入" />
+     </FormItem>
+     }
       {renderFooter()}
     </ProForm>
   );

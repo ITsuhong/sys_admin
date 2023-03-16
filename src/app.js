@@ -54,6 +54,9 @@ const errorHandler = (error) => {
 const headerInterceptor = (url, options) => {
   const timestamp = new Date().getTime()
   const rand = Math.floor(Math.random() * 100) //0-100随机整数
+  if (url.substr(0, 4) != 'http') {
+    url = (process.env.NODE_ENV === 'development' ? '/api' : requestUrl) + url;
+  }
   return {
     url,
     options: {
@@ -62,7 +65,7 @@ const headerInterceptor = (url, options) => {
       headers: {
         'Content-Type': options.requestType == 'form' ? 'application/x-www-form-urlencoded;charset=UTF-8' : 'application/json;charset=UTF-8',
         'api-version': 1,
-        token: localStorage.token,
+        token: sessionStorage.token,
         apiSecret: md5(md5(timestamp + "ccys" + rand)),
         timestamp,
         rand
@@ -74,15 +77,15 @@ const headerInterceptor = (url, options) => {
 //打包时接口请求路径
 const requestUrl = 'https://www.fastmock.site/mock/19502d36f214e49aeb0b29a39556846e/mock'
 export const request = {
-  errorHandler,
-  prefix: process.env.NODE_ENV === 'development' ? '/api' : requestUrl,
+  errorConfig: { errorHandler },
+  // prefix: process.env.NODE_ENV === 'development' ? '/api' : requestUrl,
   requestType: 'form',//post 请求时数据类型，默认form，需要json时services层改变传值
   requestInterceptors: [headerInterceptor],
 };
 // 全局初始化数据配置，用于 Layout 用户信息和权限初始化
 // 更多信息见文档：https://next.umijs.org/docs/api/runtime-config#getinitialstate
 export async function getInitialState() {
-  const ossHost = 'https://school-coach-static.oss-cn-chengdu.aliyuncs.com' //oss上传路径
+  const ossHost = 'https://chuhaixiangmu.oss-cn-hangzhou.aliyuncs.com' //oss上传路径
   const ossSuffix = '?x-oss-process=video/snapshot,t_1000,m_fast' //oss视频链接拼接此后缀即为视频封面图
   const getToken = () => sessionStorage.token
   const setToken = token => sessionStorage.token = token
