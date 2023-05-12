@@ -27,7 +27,7 @@ const RoleManage = () => {
     },
     {
       title: '项目图片',
-      dataIndex: 'imgs',
+      dataIndex: 'icon',
       hideInSearch: true,
       render: (text, record) => <Image width={20} height={20} src={text} />
     },
@@ -35,6 +35,15 @@ const RoleManage = () => {
       title: '排序',
       dataIndex: 'sort',
       hideInSearch: true,
+    },
+    {
+      title: '是否开启问卷',
+      dataIndex: 'openQuestionnaire',
+      render: (text, record) => <Switch checked={Boolean(record.openQuestionnaire)} onChange={() => handleSwitchQuestion(record)} checkedChildren="是" unCheckedChildren="否" />,
+      valueEnum: {
+        0: '否',
+        1: '是',
+      },
     },
     {
       title: '状态',
@@ -88,6 +97,24 @@ const RoleManage = () => {
        message.error({ content: res.msg, key: 'error' });
      }
    };
+  const handleSwitchQuestion = async record => {
+    const hide = message.loading({ content: '操作中', key: 'loading' });
+    const res = await dispatch({
+      type: 'global/service',
+      service: service_project.update,
+      payload: {
+        id: record.id,
+        openQuestionnaire: Number(record.openQuestionnaire) ? 0 : 1
+      }
+    })
+    hide()
+    if (res?.code == 200) {
+      message.success({ content: '操作成功', key: 'success' });
+    } else {
+      message.error({ content: res.msg, key: 'error' });
+    }
+    actionRef.current?.reload();
+  }
   const handleSwitchChange = async record => {
     const hide = message.loading({ content: '操作中', key: 'loading' });
     const res = await dispatch({

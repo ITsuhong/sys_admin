@@ -24,13 +24,15 @@ const Info = ({
       <ProDescriptions.Item label="反馈内容" span={2}>
         <Field text={formVals.content} />
       </ProDescriptions.Item>
-      <ProDescriptions.Item label="反馈图片">
-        <Image.PreviewGroup>
-          <Space wrap>
-            {formVals.imgs?.split(',').map(item => <Image key={item} width={100} height={100} src={item} />)}
-          </Space>
-        </Image.PreviewGroup>
-      </ProDescriptions.Item>
+      {
+        formVals.imgs && <ProDescriptions.Item label="反馈图片">
+          <Image.PreviewGroup>
+            <Space wrap>
+              {formVals.imgs?.split(',').map(item => <Image key={item} width={100} height={100} src={item} />)}
+            </Space>
+          </Image.PreviewGroup>
+        </ProDescriptions.Item>
+      }
 
     </ProDescriptions>
   );

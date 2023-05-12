@@ -96,7 +96,7 @@ const User = () => {
         }}
         title="查看问卷"
       >
-       <Info/>
+       <Info values={stepFormValues}/>
       </GlobalDrawer>
     </PageContainer>
   );

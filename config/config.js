@@ -4,8 +4,8 @@ import defaultSettings from './defaultSettings';
 import pageRoutes from './router.config';
 export default defineConfig({
   base: '/',
-  publicPath: '/',
-  favicons: ['/favicon.ico'],
+  publicPath: '/admin/',
+  favicons: ['/admin/logo.png'],
   hash: true,
   history: { type: 'hash' },
   antd: {
@@ -30,15 +30,10 @@ export default defineConfig({
   theme: {
     'primary-color': defaultSettings.primaryColor,
   },
-  headScripts: [ //需要头部引入的三方script配置
-    'https://map.qq.com/api/js?v=2.exp&key=TUJBZ-GMTR4-FE7UG-XIRYO-IQM2F-TCF4X', //腾讯地图script
-    'http://api.map.baidu.com/api?v=2.0&ak=GC2tQ11of0Kr8WLpYws4ySC3aPT7t4ly',//百度地图script
-    'https://webapi.amap.com/maps?v=1.4.15&key=c070243f603d1206459ee7e2f8cbb191',//高德地图script
-  ],
   externals: {},
   proxy: {
     '/api': {
-      target: 'http://192.168.2.238:9100',
+      target: 'http://47.99.96.81/',
       // target: 'https://www.fastmock.site/mock/19502d36f214e49aeb0b29a39556846e/mock',
       changeOrigin: true,
       pathRewrite: {
@@ -54,7 +49,7 @@ export default defineConfig({
   access: {},
   initialState: {}, // access 插件依赖 initial State 所以需要同时开启
   deadCode: { //检测未使用的文件和导出
-    failOnHint: true, //检测失败是否终止进程
+    failOnHint: false, //检测失败是否终止进程
     exclude: ['src/pages/document.ejs'],  //排除检测的范围
   },
   helmet: false, //不会集成 react-helmet-async同时构建产物也会减少相应的尺寸

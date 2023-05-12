@@ -22,6 +22,11 @@ const Subject = ({values}) => {
       hideInSearch: true,
       valueType: 'indexBorder',
     },
+      {
+          title: '排序',
+          dataIndex: 'sort',
+          hideInSearch: true
+      },
     {
       title: '题目',
       dataIndex: 'subject',

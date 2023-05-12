@@ -103,7 +103,7 @@ const RoleManage = () => {
     const hide = message.loading({ content: '操作中', key: 'loading' });
     const res = await dispatch({
       type: 'global/service',
-      service: service_demoTable.update,
+      service: service_advertis.update,
       payload: {
         id: record.id,
         state: Number(record.state) ? 0 : 1

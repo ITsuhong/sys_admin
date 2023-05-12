@@ -10,7 +10,7 @@ import GlobalDrawer from '@/components/GlobalDrawer'
 
 import * as service_user from '@/services/cms/user';
 
-const Msq = () => {
+const Msq = ({values}) => {
   const dispatch = useDispatch()
   const [stepFormValues, setStepFormValues] = useState({});
   const [infoModalVisible, handleInfoModalVisible] = useState(false);
@@ -55,7 +55,7 @@ const Msq = () => {
         actionRef={actionRef}
         request={({ current, ...params }) => {
           // console.log(params)//查询参数，pageNum用current特殊处理
-          return service_user.findQuestionnaireList({ ...params, pageNum: current })
+          return service_user.findQuestionnaireList({ ...params, pageNum: current,userId:values.id })
         }}
         postData={data => data.list}
         columns={columns}

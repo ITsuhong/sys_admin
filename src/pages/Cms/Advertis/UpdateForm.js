@@ -22,9 +22,9 @@ const UpdateForm = ({
   const [selectList,setList]=useState([])
   useEffect(()=>{
     (async ()=>{
-      const res=await service_case.query({limit:0})
+      const res=await service_case.query({pageSize:99999})
       if(res.code==200){
-        setList(res.data.list)
+        setList(res.data.list.filter(item=>item.state===1))
       }
     })()
   },[])

@@ -6,8 +6,8 @@ const proSettings = {
   fixedHeader: true,
   fixSiderbar: true,
   colorWeak: false,
-  title: '出海',
+  title: 'S2S Group 公关广告人',
   pwa: false,
-  logo: '/logo.svg',
+  logo: '/admin/logo.png',
 };
 export default proSettings;

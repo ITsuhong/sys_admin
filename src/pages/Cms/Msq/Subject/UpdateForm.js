@@ -60,7 +60,7 @@ const UpdateForm = ({
         label="类型"
         rules={[{ required: true, message: '请输入！' }]}
       >
-        <Radio.Group>
+        <Radio.Group defaultValue={0}>
           <Radio value={0}>单选</Radio>
           <Radio value={1}>多选</Radio>
         </Radio.Group>

@@ -75,7 +75,7 @@ const headerInterceptor = (url, options) => {
 };
 
 //打包时接口请求路径
-const requestUrl = 'https://www.fastmock.site/mock/19502d36f214e49aeb0b29a39556846e/mock'
+const requestUrl = 'https://admin.s2sgroup.top'
 export const request = {
   errorConfig: { errorHandler },
   // prefix: process.env.NODE_ENV === 'development' ? '/api' : requestUrl,
@@ -167,13 +167,13 @@ export const layout = ({ initialState, setInitialState }) => {
       locale: false,
       // 权限路由
       params: { token: sessionStorage.token }, // 每当 sessionStorage.token 发生修改时重新执行 request
-      // request: async (params, defaultMenuData) => {
-      //   if (!params.token) return [] //没有token不走接口
-      //   const res = await service_module.queryLoginModules()
-      //   const menuRes = res.data.map(item => ({ ...item, icon: defaultMenuData.find(route => route.path == item.path)?.icon }))
-      //   setInitialState({ ...initialState, menuRes })
-      //   return loopMenuItem(menuRes)
-      // }
+      request: async (params, defaultMenuData) => {
+        if (!params.token) return [] //没有token不走接口
+        const res = await service_module.queryLoginModules()
+        const menuRes = res.data.map(item => ({ ...item, icon: defaultMenuData.find(route => route.path == item.path)?.icon }))
+        setInitialState({ ...initialState, menuRes })
+        return loopMenuItem(menuRes)
+      }
     },
     // links: process.env.NODE_ENV === 'development' ? [
     //   <a href="http://192.168.2.74:9010/admin/swagger-ui.html" target="_blank">

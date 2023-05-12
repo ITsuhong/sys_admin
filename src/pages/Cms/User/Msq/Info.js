@@ -29,9 +29,9 @@ const Info = ({ values }) => {
                     <div style={{ 'marginLeft': '24px' }}>
                         {item.options.split('&').map(children => {
                             return (
-                           item.selectedOptions==children?<div style={{ 'display': 'flex' }}>
-                                <CheckCircleTwoTone twoToneColor="#52c41a" /><div style={{ 'marginLeft': '4px', 'color': index == 1 ? '#52c41a' : '' }}>{children}</div>
-                            </div>: <div style={{ 'display': 'flex' }}>
+                           item.selectedOptions.includes(children)?<div style={{ 'display': 'flex' }} key={children}>
+                                <CheckCircleTwoTone twoToneColor="#52c41a" /><div style={{ 'marginLeft': '4px', 'color': index === 1 ? '#52c41a' : '' }}>{children}</div>
+                            </div>: <div style={{ 'display': 'flex' }} key={children}>
                             <CloseCircleOutlined /> <div style={{ 'marginLeft': '4px' }}>{children}</div>
                         </div>
                             )

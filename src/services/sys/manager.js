@@ -14,5 +14,5 @@ export async function remove(params) {
   return request('/v2/sub/administrator', { method: 'DELETE', params });
 }
 export async function updatePsd(data) {
-  return request('/v2/sub/updatePwd', { method: 'POST', data });
+  return request('/v2/sub/updatePwd', { method: 'PUT', data });
 }
