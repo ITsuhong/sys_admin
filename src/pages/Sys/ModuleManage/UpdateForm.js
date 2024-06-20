@@ -22,7 +22,7 @@ const UpdateForm = ({
     pid: values.pid,
     name: values.name,
     path: values.path,
-    number: values.number,
+    sort: values.sort,
     description: values.description,
   });
 
@@ -65,7 +65,7 @@ const UpdateForm = ({
         pid: formVals.pid || '0',
         name: formVals.name,
         path: formVals.path,
-        number: formVals.number,
+        sort: formVals.sort,
         description: formVals.description,
       }}
     >
@@ -101,7 +101,7 @@ const UpdateForm = ({
         <Input placeholder="请复制路由表里的path（例：/sys）" maxLength={50} allowClear />
       </FormItem>
       <FormItem
-        name="number"
+        name="sort"
         label="排序"
         rules={[{ required: true, message: '请输入排序！' }]}
       >

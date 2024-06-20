@@ -22,7 +22,7 @@ export default [
     routes: [
       {
         name: '模块管理',
-        access: 'accessDev',
+        access: 'accessRoute',
         path: '/sys/module',
         component: './Sys/ModuleManage',
       },
